@@ -1,14 +1,11 @@
 CC     = gcc
-CFLAGS = -I/usr/include/postgresql
+CFLAGS = -I/usr/include/postgresql -Wall
 LIBS   = -lpq
 
-all: conexion dispositivos
+all: netmonitor
 
-conexion: conexion.c
-	$(CC) conexion.c -o conexion $(CFLAGS) $(LIBS)
-
-dispositivos: dispositivos.c
-	$(CC) dispositivos.c -o dispositivos $(CFLAGS) $(LIBS)
+netmonitor: netmonitor.c dispositivos.c db.c
+	$(CC) netmonitor.c dispositivos.c db.c -o netmonitor $(CFLAGS) $(LIBS)
 
 clean:
-	rm -f conexion dispositivos
+	rm -f netmonitor dispositivos conexion
