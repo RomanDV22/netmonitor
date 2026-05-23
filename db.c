@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "db.h"
 
-#define CONNINFO "host=localhost dbname=netmonitor user=roman password=RodreehPy26"
+#define CONNINFO "host=localhost dbname=netmonitor_dev user=claude password=12345"
 
 PGconn *conectar() {
     PGconn *conn = PQconnectdb(CONNINFO);
