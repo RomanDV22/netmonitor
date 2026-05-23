@@ -3,3 +3,6 @@
 build/
 .env
 conexion
+backup_netmonitor.sql
+dispositivos
+netmonitor
