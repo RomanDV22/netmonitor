@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <libpq-fe.h>
@@ -8,6 +9,67 @@
 
 #define PUERTO   8080
 #define BUFFER   4096
+
+// ─────────────────────────────────────
+//  Decodificar Base64
+// ─────────────────────────────────────
+int base64_decode(const char *input, char *output, int max_len) {
+    const char tabla[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    int len = strlen(input);
+    int out_i = 0;
+
+    int vals[4];
+    for (int i = 0; i < len; i += 4) {
+        for (int j = 0; j < 4; j++) {
+            char c = (i + j < len) ? input[i + j] : 'A';
+            if (c == '=') { vals[j] = 0; continue; }
+            char *p = strchr(tabla, c);
+            vals[j] = p ? (int)(p - tabla) : 0;
+        }
+        if (out_i < max_len - 1)
+            output[out_i++] = (vals[0] << 2) | (vals[1] >> 4);
+        if (out_i < max_len - 1)
+            output[out_i++] = ((vals[1] & 0xF) << 4) | (vals[2] >> 2);
+        if (out_i < max_len - 1)
+            output[out_i++] = ((vals[2] & 0x3) << 6) | vals[3];
+    }
+    output[out_i] = '\0';
+    return out_i;
+}
+
+// ─────────────────────────────────────
+//  Validar credenciales del header Authorization
+// ─────────────────────────────────────
+int autenticado(char *request) {
+    char *env_user = getenv("NETMONITOR_USER");
+    char *env_pass = getenv("NETMONITOR_PASS");
+
+    if (!env_user || !env_pass) {
+        printf("[AUTH] Variables de entorno no configuradas\n");
+        return 0;
+    }
+
+    char *auth_header = strstr(request, "Authorization: Basic ");
+    if (!auth_header) return 0;
+
+    auth_header += strlen("Authorization: Basic ");
+
+    char b64_valor[256] = {0};
+    int i = 0;
+    while (auth_header[i] && auth_header[i] != '\r' && auth_header[i] != '\n' && i < 255) {
+        b64_valor[i] = auth_header[i];
+        i++;
+    }
+    b64_valor[i] = '\0';
+
+    char decodificado[256] = {0};
+    base64_decode(b64_valor, decodificado, sizeof(decodificado));
+
+    char esperado[256];
+    snprintf(esperado, sizeof(esperado), "%s:%s", env_user, env_pass);
+
+    return strcmp(decodificado, esperado) == 0;
+}
 
 // ─────────────────────────────────────
 //  Decodificar URL (%27 → ', %20 → ' ')
@@ -157,6 +219,16 @@ void buscar_seguro(PGconn *conn, int socket, char *nombre) {
 // ─────────────────────────────────────
 void manejar_request(PGconn *conn, int socket, char *request) {
     printf("\n[REQUEST] %s\n", request);
+
+    if (!autenticado(request)) {
+        char *resp = "HTTP/1.1 401 Unauthorized\r\n"
+                     "WWW-Authenticate: Basic realm=\"NetMonitor\"\r\n"
+                     "Content-Type: text/plain\r\n\r\n"
+                     "Acceso denegado. Credenciales requeridas.\n";
+        send(socket, resp, strlen(resp), 0);
+        printf("[AUTH] Acceso denegado\n");
+        return;
+    }
 
     if (strstr(request, "GET /vulnerable")) {
         char *nombre = extraer_parametro(request, "nombre=");
