@@ -1,0 +1,59 @@
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  NetMonitor — Reporte de tráfico
+  Generado: Sat May 30 22:12:27 UTC 2026
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+── Dispositivos registrados ──
+ id |    nombre     |      ip       |    tipo     | activo 
+----+---------------+---------------+-------------+--------
+  1 | Roman-PC2026  | 192.168.0.139 | pc          | t
+  2 | Notebook      | 192.168.0.118 | notebook    | t
+  3 | Router-Casa   | 192.168.0.1   | router      | t
+  5 | 192.168.0.33  | desconocido   | desconocido | t
+  6 | 192.168.0.123 | desconocido   | desconocido | t
+  7 | 192.168.0.124 | desconocido   | desconocido | t
+  8 | 192.168.0.33  | desconocido   | desconocido | t
+  9 | 192.168.0.123 | desconocido   | desconocido | t
+ 10 | 192.168.0.124 | desconocido   | desconocido | t
+ 11 | 192.168.0.126 | desconocido   | desconocido | t
+ 12 | 192.168.0.161 | desconocido   | desconocido | t
+(11 rows)
+
+
+── Paquetes por protocolo ──
+ protocolo | total 
+-----------+-------
+ ICMP      |    32
+ UDP       |     2
+(2 rows)
+
+
+── Top 5 IPs origen ──
+   ip_origen   | paquetes 
+---------------+----------
+ 172.28.37.80  |       17
+ 192.168.0.1   |       16
+ 91.189.91.157 |        1
+(3 rows)
+
+
+── Top 5 IPs destino ──
+  ip_destino   | paquetes 
+---------------+----------
+ 172.28.37.80  |       17
+ 192.168.0.1   |       16
+ 91.189.91.157 |        1
+(3 rows)
+
+
+── Actividad por hora ──
+        hora         | paquetes 
+---------------------+----------
+ 2026-05-23 21:00:00 |       16
+ 2026-05-23 20:00:00 |       18
+(2 rows)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Reporte guardado en: /home/rodreehpy/Claude_Project/reportes/reporte_20260530_221227.txt
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

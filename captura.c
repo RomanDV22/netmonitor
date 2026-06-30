@@ -70,19 +70,20 @@ void procesar_paquete(u_char *args,
     snprintf(p_origen_str,  sizeof(p_origen_str),  "%d", puerto_origen);
     snprintf(p_destino_str, sizeof(p_destino_str), "%d", puerto_destino);
 
-    const char *params[5] = {
+    const char *params[6] = {
         protocolo,
         ip_origen,
         ip_destino,
         p_origen_str,
-        p_destino_str
+        p_destino_str,
+	tamanio
     };
 
     PGresult *res = PQexecParams(conn,
         "INSERT INTO trafico "
-        "(protocolo, ip_origen, ip_destino, puerto_origen, puerto_destino) "
-        "VALUES ($1, $2, $3, $4, $5)",
-        5, NULL, params, NULL, NULL, 0
+        "(protocolo, ip_origen, ip_destino, puerto_origen, puerto_destino, tamanio) "
+        "VALUES ($1, $2, $3, $4, $5, $6)",
+        6, NULL, params, NULL, NULL, 0
     );
 
     PQclear(res);

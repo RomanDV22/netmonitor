@@ -4,8 +4,8 @@ LIBS   = -lpq -lpcap
 
 all: netmonitor captura scanner servidor
 
-netmonitor: netmonitor.c dispositivos.c db.c
-	$(CC) netmonitor.c dispositivos.c db.c -o netmonitor $(CFLAGS) $(LIBS)
+netmonitor: netmonitor.c dispositivos.c interfaces.c conexiones.c db.c
+	$(CC) netmonitor.c dispositivos.c interfaces.c conexiones.c db.c -o netmonitor $(CFLAGS) $(LIBS)
 
 captura: captura.c db.c
 	$(CC) captura.c db.c -o captura $(CFLAGS) $(LIBS)

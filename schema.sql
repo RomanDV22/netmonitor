@@ -35,3 +35,19 @@ CREATE TABLE trafico (
     tamanio         INTEGER,
     info            TEXT
 );
+
+-- ─────────────────────────────────────
+--  Etapa 2 — Topología de red
+-- ─────────────────────────────────────
+
+-- Une dos interfaces (de dispositivos distintos, normalmente).
+-- Modela el "cable" entre un puerto y otro, como en Packet Tracer.
+CREATE TABLE conexiones (
+    id              SERIAL PRIMARY KEY,
+    interfaz_a_id   INTEGER REFERENCES interfaces(id),
+    interfaz_b_id   INTEGER REFERENCES interfaces(id),
+    tipo_cable      VARCHAR(30) DEFAULT 'ethernet',
+    activa          BOOLEAN DEFAULT TRUE,
+    created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CHECK (interfaz_a_id <> interfaz_b_id)
+);

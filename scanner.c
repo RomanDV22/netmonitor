@@ -38,7 +38,7 @@ void guardar_si_no_existe(PGconn *conn, const char *ip) {
 
         res = PQexecParams(conn,
             "INSERT INTO dispositivos (nombre, ip, tipo) "
-            "VALUES ($1, 'desconocido', 'desconocido')",
+	    "VALUES ('desconocido', $1, 'desconocido')",
             1, NULL, params, NULL, NULL, 0
         );
         printf("  [+] Nuevo dispositivo encontrado: %s\n", ip);
